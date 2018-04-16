@@ -1,0 +1,215 @@
+{% extends 'base.html' %}
+{% load linecode from truncate_filter %}
+
+{% block title %}工单详情{% endblock %}
+
+{% block main %}
+
+
+
+<hr>
+
+
+<div ng-controller="MessageModalController as modal">
+	<ul class="nav nav-wizard">
+	{% if openstatus or auditstatus or confirmstatus or closestatus %}
+	    <li class="{{ openstatus }} col-sm-3" data-toggle="tab">
+	        <a>待处理</a>
+	    </li>  
+	    <li class="{{ auditstatus }} col-sm-3" data-toggle="tab" >
+	        <a>审核通过</a>
+	    </li>
+	    <li class="{{ confirmstatus }} col-sm-3" data-toggle="tab" >
+	        <a>正在处理</a>
+	    </li>
+	    <li class="{{ closestatus }} col-sm-3" data-toggle="tab">
+	    	<a>处理完毕</a>
+	    </li>
+	{% endif %}
+	{% if repulsestatus %}
+	    <li class="{{ openstatus }} col-sm-3" data-toggle="tab">
+	        <a>待处理</a>
+	    </li>  
+	    <li class="{{ repulsestatus }} col-sm-3" data-toggle="tab" >
+	        <a>审核未通过</a>
+	    </li>
+	    <li class="{{ confirmstatus }} col-sm-3" data-toggle="tab" >
+	        <a>正在处理</a>
+	    </li>
+	    <li class="{{ closestatus }} col-sm-3" data-toggle="tab">
+	    	<a>处理完毕</a>
+	    </li>
+	{% endif %}
+	</ul>
+	<hr>
+
+	<div class="panel panel-default">
+
+		<div class="panel-heading">
+
+	        <div class="row col-sm-12">
+
+				{% if confirm %}
+					<button class="btn  btn-success pull-right" ng-disabled="is_confirm" ng-click="modal.confirm()" >
+						确认
+					</button>
+				{% endif %}
+				{% if auditpassed %}
+					<button class="btn  btn-success pull-right" ng-disabled="is_auditpassed" ng-click="modal.auditpassed()">
+						审核通过
+					</button>
+				{% endif %}
+				{% if repulse %}
+					<button class="btn  btn-danger" ng-disabled="is_repulse" ng-click="modal.repulse()">
+						打回
+					</button>
+				{% endif %}
+				{% if close %}
+					<button class="btn  btn-danger" ng-disabled="is_close"  ng-click="modal.close()">
+						<span class="text-left">
+						关闭							
+						</span>
+					</button>
+				{% endif %}
+				{% if recommit %}
+<!-- 					<button class="btn  btn-warning pull-right"  ng-click="modal.recommit()">
+						重新提交
+					</button> -->
+				{% endif %}
+			</div>
+				<div class="row">
+					<div class="form-inline col-sm-4">
+						<div class="form-group">
+						<span class="text-primary" >工单号：</span>
+						{% if order_obj.id != 'undefined' %} 
+						{{ order_obj.id }}
+					{% endif %}
+					</div>
+				</div>
+				<div class="form-inline col-sm-4">
+					<div class="form-group">
+						<span class="text-primary" style="margin-left: 1em;">工单类型：</span>
+						{% if order_obj.ordertemp.name != 'undefined' %} 
+							{{ order_obj.ordertemp.name }}
+						{% endif %}
+					</div>						
+				</div>
+				<div class="form-inline col-sm-4">
+					<div class="form-group">
+						<span class="text-primary">
+							添加时间：
+						</span>
+						<small class="">
+							  {{ order_obj.addedtime }}
+	                	</small>
+	                </div>
+	        	</div>
+	        </div>
+	        <div class="row">
+				<div class="form-inline col-sm-4">
+					<div class="form-group">
+						<span class="text-primary">
+							申请人：
+						</span>
+							{{ username }}
+	                </div>
+	        	</div>                	
+	        </div>
+		</div>
+		<div class="panel-body" style="background-color: #fff;">
+			{% for k,v in field_obj.items %}
+				<div class="row">
+				    <middle class="col-lg-10">
+						<span class="col-lg-10 col-lg-offset-0.5 text-primary">{{ k|linecode }} </span>
+						<p class=" col-lg-12 col-lg-offset-0.5"><span class="text-muted">{{ v|linecode }}</span></p>
+					</middle>
+				</div>
+			{% endfor %}
+			<div class="form-inline">
+				<div class="form-group">
+				{% if order_attachment %}
+					<span class="text-danger">附件列表：</span>
+				{% endif %}
+				{% for i in order_attachment %}
+					<div class="row">
+			            <small class="col-lg-12" style="margin-left: 4em;">
+			                <a href="/static/upload/workorder/{{ order_obj.userid }}/{{ i.name }}" download="{{ i.name }}">
+								{{ i.name }}
+							</a>
+						</small>
+					</div>
+				{% endfor %}
+				</div>
+			</div>
+		</div>
+	</div>
+	<hr>
+	<br>
+
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			沟通记录
+		</div>
+		<div class="panel-body">
+
+		{% for item in mesg_obj %}
+		    <div class="media conversation">
+                <a class="pull-left" href="#">
+					{% if item.avatar %}
+                    <img class="media-object" style="width: 50px; height: 50px;" src="{{ item.avatar }}">
+                	{% endif %}
+                </a>
+                <div class="media-body">
+                	<small class="pull-right time"><i class="fa fa-clock-o"> &nbsp;&nbsp;</i>{{ item.addedtime }}
+                	</small>
+                    <h5 class="media-heading">{{ item.username }}</h5>
+                    <small class="col-lg-10">{% if item.message != 'undefined' %} {{ item.message |linecode}} {% endif %}</small>
+					{% for i in item.attachment %}
+	                    <small class="col-lg-10">
+		                    <a href="/static/upload/workorder/{{ order_obj.userid }}/{{ i.name }}" download="{{i.name}}">
+								{{ i.name }}
+							</a>
+						</small>
+					{% endfor %}
+                </div>
+            </div>
+		{% endfor %}
+
+		</div>
+	</div>
+	<div class="form-group">
+		<input type="hidden" id="send_handle_user" value="{{ send_handle_user }}" />	
+		<input type="hidden" id="send_order_user" value="{{ send_order_user }}" />
+		<input type="hidden" id="message_status" value="{{ order_obj.status }}" />
+		<input type="hidden" id="userid" value="{{ userid }}" />	
+		<input type="hidden" id="orderUserId" value="{{ orderUserId }}" />	
+		<input type="hidden" id="order_id" value="{{ order_obj.id }}" />
+
+            <ul>
+                <li ng-repeat="item in modal.queue">{$ item.name $}
+                    <button type="button" class="btn btn-danger btn-xs" ng-click="modal.remove(this)">
+                        <span class="glyphicon glyphicon-trash">
+                            
+                        </span> 删除
+                    </button>
+                </li>
+            </ul>
+            <label class="pull-right">
+                <input style="display:{{ disabled }};color: transparent;"  type="file" id="file" name="file" multiple onchange="angular.element(this).scope().modal.getFile(this)"/>
+            </label>
+
+		<textarea style="display:{{ disabled }};" class="form-control" rows="12" ng-model="message">
+
+		</textarea>
+	</div>
+
+	<div class="form-group">
+		<div class="">
+			<a href="{% url 'horizon:sysadmin:workorder:index' %}">
+			    <button type="button" class="btn btn-success">取消</button>
+			</a>
+		    <button style="display:{{ disabled }};" class="btn btn-primary" ng-disabled="is_submit" ng-click="modal.submit()">添加</button>			    
+		</div>
+	</div>
+</div>
+{% endblock %}

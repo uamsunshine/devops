@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% block title %}修改字段{% endblock %}
+
+{% block main %}
+<div ng-controller="WorkOrderFieldModalController as modal">
+	<form class="form-horizontal">
+	    <input type="hidden" id="field" value="{{ field.id }}" />
+	    <input type="hidden" id="fieldname" value="{{ field.name }}" />
+	    <input type="hidden" id="fieldvalue" value="{{ field.value }}" />
+	    <input type="hidden" id="fielddesc" value="{{ field.description }}" />
+	    <input type="hidden" id="fieldtype" value="{{ field.fieldid }}" />
+		<div class="form-group">
+		  	<a href="{% url 'horizon:sysadmin:workorder:field' %}">
+				<i class="fa fa-reply fa-3x pull-left col-sm-2"></i>
+		  	</a>
+		</div>
+		<hr>
+		<div class="form-group">
+			<label  class="col-sm-2 control-label">字段名</label>
+			<div class="col-sm-6">
+				<input type="text" class="form-control" ng-model="workorder_field" id="workorder_field" placeholder="添加的字段名">
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label  class="col-sm-2 control-label">字段描述</label>
+			<div class="col-sm-6">
+			    <input type="text" class="form-control" ng-model="workorder_desc" id="workorder_desc" placeholder="添加字段描述">
+			</div>
+		</div>
+
+
+		<div class="form-group">
+			<label  class="col-sm-2 control-label">选项设置</label>
+			<div class="col-sm-6">
+				<i class="fa fa-plus-circle pull-right fa-2x" style="color:green"  ng-click="modal.addChoice()"></i>
+			</div>
+		</div>
+		<hr>
+
+
+		<div class="form-group">
+
+		{% for choice in value %}
+			<input type="hidden" class="field_choices" type="text" value="{{ choice.name }}" name="{{ choice.id }}">
+		{% endfor %}
+
+			<fieldset  data-ng-repeat="choice in choices ">
+			      	<label class="col-sm-2 control-label" >选项</label>
+			      	<div class="col-sm-6">
+			      	 	<input class="form-control" value="{$ choice.name $}" id="{$ choice.id $}" type="text" placeholder="选项值">
+			      	</div>
+			      	<button   ng-click="modal.removeChoice(this)">-</button>      				
+		    </fieldset>
+
+		</div>
+
+		<hr>
+
+		<div class="form-group">
+			<div class="col-sm-offset-2 col-sm-10">
+			    <a href="{% url 'horizon:sysadmin:workorder:field' %}">
+			    	<button type="button" class="btn btn-default">取消</button>
+			    </a>
+			    <button  class="btn btn-primary" ng-click="modal.choiceUpdate()">更新</button>
+			</div>
+		</div>
+	</form>
+
+</div>
+
+{% endblock %}

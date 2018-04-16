@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}工单模板模块{% endblock %}
+{% block main %}
+
+	<div class="panel panel-info" style="margin: 10px;padding: 2px;">
+		<div class="panel-heading" style="height: 50px;">
+		  	<a href="{% url 'horizon:sysadmin:workorder:listtemp' %}">
+				<i class="fa fa-reply fa-2x pull-left col-sm-2"></i>
+		  	</a>
+		</div>
+    	<ul class="list-group">
+        	{% for i in temp_obj %}
+        		<li class="list-group-item"> <a href="{% url 'horizon:sysadmin:workorder:createorder' i.id %}"> {{ i.name }} </a> </li>
+            {% endfor %}
+        </ul>
+		<div class="panel-footer">
+		</div>
+	</div>
+
+
+{% endblock %}

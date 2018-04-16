@@ -1,0 +1,177 @@
+{% extends 'base.html' %}
+{% block title %}添加工单{% endblock %}
+
+{% block main %}
+
+<div ng-controller="WorkOrderModalController as modal">
+    <form class="form-horizontal" novalidate>
+
+        <input type="hidden" id="temp_id" value="{{ temp_obj.id }}" />
+<!--         <input type="hidden" id="default_send" value="{{ default_send }}">
+        <input type="hidden" id="cc" value="{{ cc }}"> -->
+        <input type="hidden" id="userid" value="{{ userid }}" />
+        <div class="form-group">
+            <a href="{% url 'horizon:sysadmin:workorder:listtemp' %}">
+                <i class="fa fa-reply fa-3x pull-left col-sm-2"></i>
+            </a>
+        </div>
+        <hr>
+<!--        <div class="form-group">
+            <label  class="col-sm-2 control-label">主题</label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control" ng-model="order_name" id="order_name" placeholder="主题">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label  class="col-sm-2 control-label">描述</label>
+            <div class="col-sm-6">
+                <textarea class="form-control" rows="5%" cols="100%" ng-model="order_desc" id="order_desc">
+
+                </textarea>
+            </div>
+        </div> -->
+
+
+
+<!--        <div class="form-group">
+            <label  class="col-sm-2 control-label">默认发送</label>
+            <div class="col-sm-6">
+                <select disabled multiple="multiple" class="form-control chosen-select-no-results "  id="default_send" data-placeholder="默认发送" >
+                {#  {% for item in default_send %} #}
+                        <option value="{{ item.id }}"  {{ item.selected }} >{{ item.username }}</option>
+                {#  {% endfor %} #}
+                </select>
+            </div>
+        </div> -->
+
+
+<!--        <div class="form-group">
+            <label  class="col-sm-2 control-label">优先级</label>
+            <div class="col-sm-6">
+                {% for p in priority %}
+                    <label class="">
+                        <input type="radio" class="priority" value="{{ p.value }}" {{ p.checked }} name="priority" > {{ p.name }}
+                    </label>
+                {% endfor %}
+            </div>
+        </div> -->
+
+
+
+        {% for field in fields %}
+        <div class="form-group">
+
+            <label  class="col-sm-2 control-label" id="label_{{ field.id }}" value="{{ field.name }}">{{ field.name }}</label>
+            {% ifequal field.fieldtype.value 'select' %} 
+                <input type="hidden" class="field_select_num" value="{{ field.id }}" />
+                <input type="hidden" id="select_field" value="{{ field.fieldtype.value }}">
+                <div class="col-sm-6">
+                    <select required="True" class="form-control chosen-select-no-results " data-style="btn-info" id="field_{{ field.id }}">
+                        {% for i in field.value %}
+                            <option value="{{ i.id }}">{{ i.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            {% endifequal %}
+
+            {% ifequal field.fieldtype.value 'multiple' %} 
+                <input type="hidden" class="field_multiple_num" value="{{ field.id }}" />
+                <input type="hidden" id="multiple_field" value="{{ field.fieldtype.value }}">
+                <div class="col-sm-6">
+                    <select required="True" multiple=multiple class="form-control chosen-select-no-results " data-placeholder="{{ field.description }}" data-style="btn-info" id="field_{{ field.id }}">
+                        {% for i in field.value %}
+                            <option value="{{ i.id }}">{{ i.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            {% endifequal %}
+
+            {% ifequal field.fieldtype.value 'text' %}
+                <input type="hidden" class="field_text_num" value="{{ field.id }}" />
+                <input type="hidden" id="text_field" value="{{ field.fieldtype.value }}">
+                <div class="col-sm-6">
+                    <input required="True" type="{{ field.fieldtype.value }}" class="form-control"  id="field_{{ field.id}}" placeholder="{{ field.description }}" >
+                </div>
+            {% endifequal %}
+
+            {% ifequal field.fieldtype.value 'textarea' %}
+                <input type="hidden" class="field_textarea_num" value="{{ field.id }}" />
+                <input type="hidden" id="textarea_field" value="{{ field.fieldtype.value }}">
+                <div class="col-sm-6">
+                    <textarea required="True" class="form-control" rows="5%" cols="100%" id="field_{{ field.id}}" placeholder="{{ field.description }}"></textarea>
+                </div>
+            {% endifequal %}
+
+            {% ifequal field.fieldtype.value 'radio' %}
+                <input type="hidden" class="field_radio_num" value="{{ field.id }}" />
+                <input type="hidden" id="radio_field" value="{{ field.fieldtype.value }}">
+                <div class="col-sm-6">
+                    {% for i in field.value %}
+                        <label class="">
+                            <input required="True" type="radio" class="field_{{ field.id}}" value="{{ i.name }}"  name="radio_{{ field.id }}" > {{ i.name }}
+                        </label>
+                    {% endfor %}
+                </div>
+            {% endifequal %}
+
+            {% ifequal field.fieldtype.value 'checkbox' %}
+                <input type="hidden" class="field_checkbox_num" value="{{ field.id }}" />
+                <input type="hidden" id="checkbox_field" value="{{ field.fieldtype.value }}">
+                <div class="col-sm-6">
+                    {% for i in field.value %}
+                        <label class="">
+                            <input required="True" type="checkbox" class="field_{{ field.id}}" value="{{ i.name }}"  name="{{ i.value }}" > {{ i.name }}
+                        </label>
+                    {% endfor %}
+                </div>
+            {% endifequal %}
+
+        </div>
+        {% endfor %}
+        {% if temp_obj.is_cc %}
+        <div class="form-group">
+            <label type="hidden" class="col-sm-2 control-label">抄送</label>
+            <div class="col-sm-6">
+                <select  multiple="multiple" class="form-control chosen-select-no-results " id="order_cc" data-placeholder="抄送">
+                 {% for item in cc %}
+                        <option value="{{ item.id }}" >{{ item.username }}</option>
+                {% endfor %}
+                </select>
+            </div>
+        </div>
+        {% endif %}
+        {% if temp_obj.is_attachment %}
+        <div class="form-group">
+            <div class="col-sm-offset-1 col-sm-12">
+                <ul>
+                    <li ng-repeat="item in modal.queue">{$ item.name $}
+                        <button type="button" class="btn btn-danger btn-xs" ng-click="modal.remove(this)">
+                            <span class="glyphicon glyphicon-trash">
+                                
+                            </span> 删除
+                        </button>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-sm-6 pull-right">
+                <label class="">
+                    <input class="" type="file" id="file" name="file" multiple onchange="angular.element(this).scope().modal.getFile(this)"/>
+                </label>
+            </div>
+        </div>
+
+        {% endif %}
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <a href="{% url 'horizon:sysadmin:workorder:listtemp' %}">
+                    <button type="button" class="btn btn-default">取消</button>
+                </a>
+                <button  class="btn btn-primary" ng-disabled='is_submit' ng-click="modal.submit()">添加</button>              
+            </div>
+        </div>
+
+
+    </form>
+</div>
+{% endblock %}

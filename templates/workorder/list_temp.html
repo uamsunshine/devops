@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block title %}工单模板模块{% endblock %}
+{% block main %}
+
+
+<nav class="navbar sticky-top navbar-light bg-faded">
+  	<a class="navbar-brand" href="{% url 'horizon:sysadmin:workorder:index' %}">
+		<i class="fa fa-reply fa-2x pull-left col-sm-2"></i>
+  	</a>
+</nav>
+<hr>
+<div class="panel-group" id="accordion">
+ 
+	{% for i in temp_type_obj %}
+		{% if i.isExist == True %} 
+			<div class="panel {{ i.icon }}">
+			 
+			    <div class="panel-heading colpsible-panel" data-parent="#accordion" data-toggle="collapse" data-target="#temp_{{ i.id }}" style="cursor:pointer;height: 50px;">
+			 
+			      <h4 class="panel-title">			 
+			 		{{ i.name }}
+			      </h4>
+			 
+			    </div>
+			 
+			    <div id="temp_{{ i.id }}" class="panel-collapse collapse">
+			 
+			      <div class="panel-body">
+			 
+					<ul class="nav nav-list">
+			        	{% for s in i.temp_obj %}
+			        		<li class="" style="overflow:hidden;white-space:nowrap;text-overflow:ellipsis;float: left;width: 33%; text-align:left; font-size: 18px;"> <a  href="{% url 'horizon:sysadmin:workorder:createorder' s.id %}">{{ s.name }}</a> </li>
+			            {% endfor %}
+			        </ul>	 
+			      </div>
+			 
+			    </div>
+
+			    <div class="panel-footer">
+			    	
+			    </div>
+			 
+			</div>
+  		{% endif %}
+	{% endfor %}
+</div>
+
+{% endblock %}

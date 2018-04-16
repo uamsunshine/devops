@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% block title %}添加工单{% endblock %}
+
+{% block main %}
+
+<div ng-controller="WorkOrderModalController as modal" nv-file-drop="" uploader="modal.uploader">
+
+		<div class="container">
+
+
+            <div class="row">
+
+                <div class="col-md-3">
+                    <input type="file" nv-file-select="" uploader="modal.uploader" multiple  /><br/>
+
+                </div>
+                <div class="col-md-9" style="margin-bottom: 40px">
+                    <p>Queue length: {$ modal.uploader.queue.length $}</p>
+
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th width="50%">Name</th>
+                                <th ng-show="modal.uploader.isHTML5">Size</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="item in modal.uploader.queue">
+                                <td>
+                                    <strong>{$ item.file.name $}</strong>
+                                </td>
+                                <td ng-show="modal.uploader.isHTML5" nowrap>{$ item.file.size/1024/1024|number:2 $} MB</td>
+
+                                <td nowrap>
+                                    <button type="button" class="btn btn-danger btn-xs" ng-click="item.remove()">
+                                        <span class="glyphicon glyphicon-trash"></span> Remove
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div>
+                     
+                        <button type="button" class="btn btn-success btn-s" ng-click="modal.uploader.uploadAll()" ng-disabled="!modal.uploader.getNotUploadedItems().length">
+                            <span class="glyphicon glyphicon-upload"></span> Upload all
+                        </button>
+
+                        <button type="button" class="btn btn-danger btn-s" ng-click="modal.uploader.clearQueue()" ng-disabled="!modal.uploader.queue.length">
+                            <span class="glyphicon glyphicon-trash"></span> Remove all
+                        </button>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+</div>
+{% endblock %}

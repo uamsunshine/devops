@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% block title %}工单处理效率{% endblock %}
+{% block main %}
+
+<div ng-controller="WorkOrderEffModalController as modal">
+	<div class="row">
+		<div class="col-sm-10" daterange-picker startdate="2017-01-01 00:00" tag="workorder" stylename="appmetric">
+				
+		</div>
+		<button type="button" class="btn btn-info btn-sm" ng-click="modal.show()" ng-disabled='show_per'>查看
+		</button>
+		<hr>
+	</div>
+	<div class="row">
+		<div class="col-sm-6 col-md-6 col-lg-6">
+			<div class="panel panel-green">
+				<div class="panel-heading">
+					<h1 class=" text-center" ">
+						<strong>
+						<p ng-bind="orders"></p>
+						</strong>
+					</h1>
+				</div>
+				<div class="panel-footer">
+					<p>
+						工单总数
+					</p>
+				</div>
+			</div>
+		</div>
+
+<!-- 		<div class="col-sm-4 col-md-4 col-lg-4">
+			<div class="panel panel-green">
+				<div class="panel-heading">
+					<h1 class="text-center" ">
+						<strong>
+						<p ng-bind="ordereff"></p>
+						</strong>
+					</h1>
+				</div>
+				<div class="panel-footer">
+					<p>
+						工单处理效率
+					</p>
+				</div>
+			</div>
+		</div> -->
+		<div class="col-sm-6 col-md-6 col-lg-6">
+			<div class="panel panel-green">
+				<div class="panel-heading">
+					<h1 class="text-center">
+						<strong>
+						<p ng-bind="openorders"></p>
+						</strong>
+					</h1>
+				</div>
+				<div class="panel-footer">
+					<p>
+						未确认的工单数量
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		
+		<div class="col-sm-12" id="show_work" style="width:100%; height: 600px;">
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-12" id="show_workDealTime" style="width:100%; height: 600px;">
+		</div>		
+	</div>
+	<div class="row">
+		<div class="col-sm-12" id="show_users" style="width:100%; height: 600px;">
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-12" id="show_dealtime" style="width:100%; height: 600px;">
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-12" id="show_effs" style="width:100%; height: 600px;">
+		</div>
+	</div>
+</div>
+
+
+{% endblock %}

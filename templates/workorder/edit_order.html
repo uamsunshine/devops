@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% load linecode from truncate_filter %}
+
+{% block title %}工单详情{% endblock %}
+
+{% block main %}
+
+{% for k,v in fields_object.items %}
+	{{ k }} {{ v }}
+{% endfor %}
+
+{% endblock %}
